@@ -26,6 +26,7 @@ class FrameMaterial:
     timestamp: float
     source: str             # "scene" | "interval"
     subtitle_window: str    # 该帧前5后15秒的字幕
+    likely_redundant: bool = False  # 与前一张已保留帧近重复(脚本用 phash 预判,agent 可优先跳过)
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -39,8 +40,35 @@ def subtitle_window_for(frame: Frame, segments: list[Segment]) -> str:
     return " ".join(t for t in picked if t)
 
 
+# 预判"近重复"的 phash 距离阈值:与前一张已保留帧距离 <= 此值,标记 likely_redundant。
+# 实测正常切换帧距离 >=18,这里取 10 作中间档:明显相似才标,避免误标掉有新增内容的帧。
+REDUNDANT_HINT_THRESHOLD = 10
+
+
+def _mark_redundancy(mats: list[FrameMaterial]) -> None:
+    """用 phash 给每帧预判是否与前一张近重复,写进 likely_redundant。
+
+    把"这帧值不值得看"的判断从 agent(每次要花一次 vision 调用去比)挪到脚本
+    (本地 phash,免费)。注意:只给 interval 帧标 —— scene 帧是画面真切换,
+    永远不标记为冗余,确保 agent 一定会看。
+    """
+    from .frames import _phash  # 复用已实现的 phash
+    prev_hash = None
+    for m in mats:
+        try:
+            h = _phash(m.image_path)
+        except Exception:
+            prev_hash = None
+            continue
+        if m.source == "interval" and prev_hash is not None and (prev_hash - h) <= REDUNDANT_HINT_THRESHOLD:
+            m.likely_redundant = True
+        else:
+            # scene 帧、或与上一张差异够大的 interval 帧:更新基准
+            prev_hash = h
+
+
 def build_materials(frames: list[Frame], segments: list[Segment]) -> list[FrameMaterial]:
-    """为每帧配字幕窗口,打包成给 agent 的素材列表(按时间排序)。"""
+    """为每帧配字幕窗口,打包成给 agent 的素材列表(按时间排序,带冗余预判)。"""
     mats = [
         FrameMaterial(
             image_path=f.path,
@@ -51,4 +79,5 @@ def build_materials(frames: list[Frame], segments: list[Segment]) -> list[FrameM
         for f in frames
     ]
     mats.sort(key=lambda m: m.timestamp)
+    _mark_redundancy(mats)
     return mats
