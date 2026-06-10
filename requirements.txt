@@ -1,0 +1,13 @@
+# 已验证可用(2026-06-09 实测跑通)
+youtube-transcript-api>=1.0.0   # 抓 YouTube 字幕
+yt-dlp>=2026.6.9                 # 下载音频/视频
+faster-whisper>=1.0.0            # 无字幕时音频转写
+
+# 读画面通路(设计已定,待接入 API key 后验证)
+imagehash>=4.3.1                 # 帧去重(感知哈希)
+Pillow>=10.0.0                   # 图像处理
+# 多模态:anthropic 或 openai,二选一,跑前装
+# anthropic>=0.40.0
+# openai>=1.50.0
+
+# 系统依赖(非 pip):ffmpeg —— macOS 用 `brew install ffmpeg`

@@ -1,0 +1,20 @@
+# 临时产物
+output/*.mp3
+output/*.webm
+output/*.wav
+output/frames/
+output/*.txt
+output/*.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 密钥
+.env
+*.key
+
+# Whisper 模型缓存(很大,别提交)
+models/
