@@ -12,8 +12,8 @@
 | 字幕抓取(`transcript.py`) | ✅ 已验证跑通(含按时间戳排序修复) |
 | 无字幕→Whisper 转写(`transcribe.py`) | ✅ 已验证跑通(faster-whisper) |
 | 抽帧 + 去重(`frames.py`) | ✅ 已实现并用真实视频验证(scene@0.3 + 定时补抽 + 分流去重) |
-| 多模态读画面(`vision.py`) | 🚧 骨架,待接入 API key |
-| 融合 + 长文生成(`compose.py`) | 🚧 骨架,待接入 LLM |
+| 配字幕窗口(`vision.py`) | ✅ 已实现(为每帧配前5后15秒字幕,不调 API) |
+| 打包给 agent(`compose.py`) | ✅ 已实现(输出素材包,交 Hermes 写长文) |
 
 ## 安装
 
