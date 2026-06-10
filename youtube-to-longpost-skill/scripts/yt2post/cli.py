@@ -53,6 +53,8 @@ def main(argv=None) -> int:
     p.add_argument("--scene-threshold", type=float, default=0.3, help="场景切换阈值(默认 0.3)")
     p.add_argument("--interval", type=int, default=30, help="定时补抽间隔秒(默认 30)")
     p.add_argument("--max-height", type=int, default=480, help="下载视频最大高度(默认 480)")
+    p.add_argument("--char-limit", type=int, default=C.X_LONGPOST_CHAR_LIMIT,
+                   help=f"长文字数上限(默认 {C.X_LONGPOST_CHAR_LIMIT},适配 X Premium;免费账号约 280)")
     args = p.parse_args(argv)
 
     vid = T.extract_video_id(args.url)
@@ -92,7 +94,7 @@ def main(argv=None) -> int:
         shutil.copy(m.image_path, dst)
         m.image_path = os.path.join("frames", os.path.basename(m.image_path))
 
-    C.build_package(pkg_dir, args.url, segs, materials)
+    C.build_package(pkg_dir, args.url, segs, materials, char_limit=args.char_limit)
     print(f"\n[完成] 素材包: {pkg_dir}", file=sys.stderr)
     print(f"  - transcript.txt / manifest.json / AGENT_INSTRUCTIONS.md / frames({len(materials)})",
           file=sys.stderr)

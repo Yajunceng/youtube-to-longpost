@@ -18,6 +18,10 @@ metadata:
         description: "定时补抽间隔秒,兜底同页渐进揭示的信息"
         default: "30"
         prompt: "定时补抽间隔秒(默认 30)"
+      - key: youtube_to_longpost.char_limit
+        description: "长文字数上限。X Premium 长文上限 25000,免费账号仅 280。默认 8000"
+        default: "8000"
+        prompt: "长文字数上限(默认 8000,适配 X Premium)"
 ---
 
 # YouTube 视频 → 推特纯文本长文
@@ -104,6 +108,7 @@ cd ${HERMES_SKILL_DIR}/scripts && python3 -m yt2post.cli "<视频URL>"
 | 生成素材包 | `cd ${HERMES_SKILL_DIR}/scripts && python3 -m yt2post.cli "<URL>"` |
 | 只要文字记录 | 加 `--transcript-only` |
 | 无字幕技术视频 | 加 `--terms "术语1, 术语2"` |
+| 改长文字数上限 | 加 `--char-limit 8000`(X Premium 长文上限 25000,免费账号 280) |
 
 ## Pitfalls
 
