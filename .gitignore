@@ -14,3 +14,4 @@ venv/
 
 # Whisper 模型缓存(很大,别提交)
 models/
+.gstack/
