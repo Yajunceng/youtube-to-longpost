@@ -1,10 +1,5 @@
-# 临时产物
-output/*.mp3
-output/*.webm
-output/*.wav
-output/frames/
-output/*.txt
-output/*.json
+# 临时产物(整个 output 目录都不入库:视频/音频/帧图/字幕/打包结果)
+output/
 
 # Python
 __pycache__/
